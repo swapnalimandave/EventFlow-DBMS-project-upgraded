@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net (First block is a default-deny catch-all)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable Global Helper Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 1. Users Profile Collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 2. Clients Collection
+    match /clients/{clientId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().name is string;
+      allow update: if isSignedIn() && incoming().name is string;
+      allow delete: if isSignedIn();
+    }
+
+    // 3. Venues Collection
+    match /venues/{venueId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().name is string;
+      allow update: if isSignedIn() && incoming().name is string;
+      allow delete: if isSignedIn();
+    }
+
+    // 4. Staff Collection
+    match /staff/{staffId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().name is string;
+      allow update: if isSignedIn() && incoming().name is string;
+      allow delete: if isSignedIn();
+    }
+
+    // 5. Vendors Collection
+    match /vendors/{vendorId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().name is string;
+      allow update: if isSignedIn() && incoming().name is string;
+      allow delete: if isSignedIn();
+    }
+
+    // 6. Services Collection
+    match /services/{serviceId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().name is string;
+      allow update: if isSignedIn() && incoming().name is string;
+      allow delete: if isSignedIn();
+    }
+
+    // 7. Events Collection
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().title is string;
+      allow update: if isSignedIn() && incoming().title is string;
+      allow delete: if isSignedIn();
+
+      // Nested event sections subcollection
+      match /sections/{sectionId} {
+        allow read: if isSignedIn();
+        allow create, update: if isSignedIn() && incoming().title is string;
+        allow delete: if isSignedIn();
+
+        // Nested subcollection checklist items
+        match /items/{itemId} {
+          allow read: if isSignedIn();
+          allow create, update: if isSignedIn() && incoming().title is string;
+          allow delete: if isSignedIn();
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "EventFlow",
+  "description": "A real-time Event Management System with client tracking, calendar organization, task checklists, and a Gemini-powered AI chat agent to automate operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

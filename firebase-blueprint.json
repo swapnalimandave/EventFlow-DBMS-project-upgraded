@@ -1,0 +1,169 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role details",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "client", "staff"] }
+      },
+      "required": ["uid", "email"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "Corporate or individual client details",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "company": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "email", "createdAt"]
+    },
+    "Venue": {
+      "title": "Venue",
+      "description": "Location and capacity details for hosting events",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "capacity": { "type": "number" },
+        "contact": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "address", "capacity", "createdAt"]
+    },
+    "Staff": {
+      "title": "Staff",
+      "description": "Team member details and workload hours",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "contact": { "type": "string" },
+        "assignedHours": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "role", "contact", "assignedHours", "createdAt"]
+    },
+    "Vendor": {
+      "title": "Vendor",
+      "description": "Supplier information across categories",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "contact": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "category", "contact", "createdAt"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Services offered by specific vendors",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "vendorId": { "type": "string" },
+        "vendorName": { "type": "string" },
+        "cost": { "type": "number" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "vendorId", "cost", "createdAt"]
+    },
+    "Event": {
+      "title": "Event",
+      "description": "Core event document containing scheduling and budget information",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "clientId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "venueId": { "type": "string" },
+        "venueName": { "type": "string" },
+        "budget": { "type": "number" },
+        "status": { "type": "string", "enum": ["planning", "confirmed", "completed", "cancelled"] },
+        "assignedStaffIds": { "type": "array" },
+        "linkedServices": { "type": "array" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "date", "clientId", "venueId", "budget", "status", "assignedStaffIds", "linkedServices", "createdAt"]
+    },
+    "EventSection": {
+      "title": "EventSection",
+      "description": "Planning phases or sections of an event checklist",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["title", "order"]
+    },
+    "EventItem": {
+      "title": "EventItem",
+      "description": "Individual task inside an event section",
+      "type": "object",
+      "properties": {
+        "sectionId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["todo", "in_progress", "completed"] },
+        "assignee": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "notes": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["sectionId", "title", "status", "order"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Users Profile collection"
+    },
+    "clients/{clientId}": {
+      "schema": "Client",
+      "description": "Clients collection"
+    },
+    "venues/{venueId}": {
+      "schema": "Venue",
+      "description": "Venues collection"
+    },
+    "staff/{staffId}": {
+      "schema": "Staff",
+      "description": "Staff collection"
+    },
+    "vendors/{vendorId}": {
+      "schema": "Vendor",
+      "description": "Vendors collection"
+    },
+    "services/{serviceId}": {
+      "schema": "Service",
+      "description": "Services collection"
+    },
+    "events/{eventId}": {
+      "schema": "Event",
+      "description": "Events collection"
+    },
+    "events/{eventId}/sections/{sectionId}": {
+      "schema": "EventSection",
+      "description": "Event Planning Sections subcollection"
+    },
+    "events/{eventId}/sections/{sectionId}/items/{itemId}": {
+      "schema": "EventItem",
+      "description": "Event Checklist items subcollection"
+    }
+  }
+}
